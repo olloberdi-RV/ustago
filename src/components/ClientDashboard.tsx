@@ -1,24 +1,32 @@
 import { useState, useEffect, useRef, useId } from 'react';
+import type { ReactNode } from 'react';
 import { ShieldCheck, Wallet, CheckCircle2, AlertCircle, RefreshCw, X, ChevronRight } from 'lucide-react';
+import type { DashboardProps } from '../types';
 
-function formatMoney(amount) {
+function formatMoney(amount: number): string {
   return new Intl.NumberFormat('uz-UZ').format(amount) + ' UZS';
 }
 
-function Modal({ title, children, onClose }) {
+interface ModalProps {
+  title: string;
+  children: ReactNode;
+  onClose: () => void;
+}
+
+function Modal({ title, children, onClose }: ModalProps) {
   const titleId = useId();
-  const closeButtonRef = useRef(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
 
   // Focus the close button on mount and restore focus on unmount
   useEffect(() => {
-    const previouslyFocused = document.activeElement;
+    const previouslyFocused = document.activeElement as HTMLElement | null;
     closeButtonRef.current?.focus();
-    return () => previouslyFocused?.focus();
+    return () => { previouslyFocused?.focus(); };
   }, []);
 
   // Close on Escape key
   useEffect(() => {
-    function handleKeyDown(e) {
+    function handleKeyDown(e: KeyboardEvent) {
       if (e.key === 'Escape') onClose();
     }
     document.addEventListener('keydown', handleKeyDown);
@@ -50,10 +58,10 @@ function Modal({ title, children, onClose }) {
   );
 }
 
-export default function ClientDashboard({ data, onSwitchRole }) {
+export default function ClientDashboard({ data, onSwitchRole }: DashboardProps) {
   const { projects, transactions, users } = data;
   const project = projects[0];
-  const client = users.find((u) => u.role === 'client');
+  const client = users.find((u) => u.role === 'client')!;
   const [showAdvanceModal, setShowAdvanceModal] = useState(false);
   const [showFinalModal, setShowFinalModal] = useState(false);
   const [advanceApproved, setAdvanceApproved] = useState(false);

@@ -1,17 +1,24 @@
 import { useState } from 'react';
-import mockData from './data/mockData.js';
-import RoleSelectPage from './components/RoleSelectPage.jsx';
-import ClientDashboard from './components/ClientDashboard.jsx';
-import ProrabDashboard from './components/ProrabDashboard.jsx';
-import UstaDashboard from './components/UstaDashboard.jsx';
-import MagazinDashboard from './components/MagazinDashboard.jsx';
-import HaydovchiDashboard from './components/HaydovchiDashboard.jsx';
+import type { Role } from './types';
+import mockData from './data/mockData';
+import RoleSelectPage from './components/RoleSelectPage';
+import ClientDashboard from './components/ClientDashboard';
+import ProrabDashboard from './components/ProrabDashboard';
+import UstaDashboard from './components/UstaDashboard';
+import MagazinDashboard from './components/MagazinDashboard';
+import HaydovchiDashboard from './components/HaydovchiDashboard';
+import LandingPage from './components/LandingPage';
 
 function App() {
-  const [role, setRole] = useState(null);
+  const [page, setPage] = useState<'landing' | 'app'>('landing');
+  const [role, setRole] = useState<Role | null>(null);
 
   function handleSwitchRole() {
     setRole(null);
+  }
+
+  if (page === 'landing') {
+    return <LandingPage onGetStarted={() => setPage('app')} />;
   }
 
   if (!role) {

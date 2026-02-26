@@ -1,27 +1,29 @@
 import { useState, useRef } from 'react';
 import { Truck, RefreshCw, ShieldCheck, MapPin, Package, CheckCircle2, DollarSign } from 'lucide-react';
+import type { DashboardProps } from '../types';
 
-function formatMoney(amount) {
+function formatMoney(amount: number): string {
   return new Intl.NumberFormat('uz-UZ').format(amount) + ' UZS';
 }
 
 // NOTE: In production, PIN verification must be server-side. The PIN should
 // never be sent to the client. This component uses a runtime-generated PIN
 // stored only in memory for demo purposes.
-function generateDemoPin() {
+function generateDemoPin(): string {
   return String(Math.floor(1000 + Math.random() * 9000));
 }
 
-export default function HaydovchiDashboard({ data, onSwitchRole }) {
+export default function HaydovchiDashboard({ data, onSwitchRole }: DashboardProps) {
   const { users, orders } = data;
-  const haydovchi = users.find((u) => u.role === 'haydovchi');
-  const magazin = users.find((u) => u.role === 'magazin');
-  const prorab = users.find((u) => u.role === 'prorab');
+  const haydovchi = users.find((u) => u.role === 'haydovchi')!;
+  const magazin = users.find((u) => u.role === 'magazin')!;
+  const prorab = users.find((u) => u.role === 'prorab')!;
 
   const activeOrder = orders.find((o) => o.status === 'dispatched');
 
   // Demo PIN is generated once at component mount and kept only in memory.
   const demoPinRef = useRef(generateDemoPin());
+  // eslint-disable-next-line react-hooks/refs
   const demoPin = demoPinRef.current;
 
   const [pin, setPin] = useState('');

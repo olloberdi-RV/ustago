@@ -1,26 +1,27 @@
 import { useState } from 'react';
-import { Store, RefreshCw, ShieldCheck, Package, Truck, CheckCircle2, Clock } from 'lucide-react';
+import { Store, RefreshCw, ShieldCheck, Package, Truck, CheckCircle2 } from 'lucide-react';
+import type { DashboardProps, Order } from '../types';
 
-function formatMoney(amount) {
+function formatMoney(amount: number): string {
   return new Intl.NumberFormat('uz-UZ').format(amount) + ' UZS';
 }
 
-const orderStatusMap = {
+const orderStatusMap: Record<Order['status'], { label: string; color: string; dot: string }> = {
   pending: { label: 'Yangi buyurtma', color: 'bg-orange-100 text-orange-700', dot: 'bg-orange-500' },
   dispatched: { label: 'Jo\'natildi', color: 'bg-blue-100 text-blue-700', dot: 'bg-blue-500' },
   delivered: { label: 'Yetkazildi', color: 'bg-emerald-100 text-emerald-700', dot: 'bg-emerald-500' },
 };
 
-export default function MagazinDashboard({ data, onSwitchRole }) {
+export default function MagazinDashboard({ data, onSwitchRole }: DashboardProps) {
   const { users, orders, estimates, projects } = data;
-  const magazin = users.find((u) => u.role === 'magazin');
-  const haydovchi = users.find((u) => u.role === 'haydovchi');
+  const magazin = users.find((u) => u.role === 'magazin')!;
+  const haydovchi = users.find((u) => u.role === 'haydovchi')!;
   const project = projects[0];
   const allMaterials = estimates[0].materials;
 
-  const [orderList, setOrderList] = useState(orders);
+  const [orderList, setOrderList] = useState<Order[]>(orders);
 
-  function handleDispatch(orderId) {
+  function handleDispatch(orderId: string) {
     setOrderList((prev) =>
       prev.map((o) =>
         o.id === orderId
@@ -30,7 +31,7 @@ export default function MagazinDashboard({ data, onSwitchRole }) {
     );
   }
 
-  function handleMarkDelivered(orderId) {
+  function handleMarkDelivered(orderId: string) {
     setOrderList((prev) =>
       prev.map((o) => (o.id === orderId ? { ...o, status: 'delivered' } : o))
     );
