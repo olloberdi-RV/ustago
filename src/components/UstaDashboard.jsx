@@ -25,14 +25,11 @@ export default function UstaDashboard({ data, onSwitchRole }) {
   const intervalRef = useRef(null);
 
   useEffect(() => {
-    if (isRunning) {
-      intervalRef.current = setInterval(() => {
-        setTotalSeconds((s) => s + 1);
-        setSessionSeconds((s) => s + 1);
-      }, 1000);
-    } else {
-      clearInterval(intervalRef.current);
-    }
+    if (!isRunning) return;
+    intervalRef.current = setInterval(() => {
+      setTotalSeconds((s) => s + 1);
+      setSessionSeconds((s) => s + 1);
+    }, 1000);
     return () => clearInterval(intervalRef.current);
   }, [isRunning]);
 

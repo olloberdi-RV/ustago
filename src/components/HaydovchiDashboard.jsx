@@ -1,8 +1,15 @@
-import { useState } from 'react';
+import { useState, useRef } from 'react';
 import { Truck, RefreshCw, ShieldCheck, MapPin, Package, CheckCircle2, DollarSign } from 'lucide-react';
 
 function formatMoney(amount) {
   return new Intl.NumberFormat('uz-UZ').format(amount) + ' UZS';
+}
+
+// NOTE: In production, PIN verification must be server-side. The PIN should
+// never be sent to the client. This component uses a runtime-generated PIN
+// stored only in memory for demo purposes.
+function generateDemoPin() {
+  return String(Math.floor(1000 + Math.random() * 9000));
 }
 
 export default function HaydovchiDashboard({ data, onSwitchRole }) {
@@ -13,6 +20,10 @@ export default function HaydovchiDashboard({ data, onSwitchRole }) {
 
   const activeOrder = orders.find((o) => o.status === 'dispatched');
 
+  // Demo PIN is generated once at component mount and kept only in memory.
+  const demoPinRef = useRef(generateDemoPin());
+  const demoPin = demoPinRef.current;
+
   const [pin, setPin] = useState('');
   const [pinError, setPinError] = useState('');
   const [delivered, setDelivered] = useState(false);
@@ -20,7 +31,7 @@ export default function HaydovchiDashboard({ data, onSwitchRole }) {
 
   function handlePinSubmit() {
     if (!activeOrder) return;
-    if (pin === activeOrder.deliveryPin) {
+    if (pin === demoPin) {
       setDelivered(true);
       setPinError('');
       setTimeout(() => setPaymentSent(true), 1000);
@@ -142,6 +153,11 @@ export default function HaydovchiDashboard({ data, onSwitchRole }) {
               <p className="text-cyan-700 text-xs mb-3">
                 Materiallarni topshirgandan so'ng Prorabdan PIN-kodni oling va to'lov uchun kiriting.
               </p>
+              {/* Demo hint — remove in production; PIN verification must be server-side */}
+              <div className="bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3 text-amber-700 text-xs font-medium">
+                🔑 Demo PIN: <span className="font-black tracking-widest">{demoPin}</span>{' '}
+                <span className="font-normal">(demo maqsadida ko'rsatilmoqda)</span>
+              </div>
 
               <div className="flex gap-2">
                 <input

@@ -92,7 +92,7 @@ const mockData = {
       haydovchiId: "u5",
       requestDate: "2025-03-20",
       dispatchDate: "2025-03-21",
-      deliveryPin: "4872",
+      deliveryPin: null,
       estimatedDelivery: "2025-03-22 14:00"
     }
   ],

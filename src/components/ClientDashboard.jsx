@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect, useRef, useId } from 'react';
 import { ShieldCheck, Wallet, CheckCircle2, AlertCircle, RefreshCw, X, ChevronRight } from 'lucide-react';
 
 function formatMoney(amount) {
@@ -6,12 +6,41 @@ function formatMoney(amount) {
 }
 
 function Modal({ title, children, onClose }) {
+  const titleId = useId();
+  const closeButtonRef = useRef(null);
+
+  // Focus the close button on mount and restore focus on unmount
+  useEffect(() => {
+    const previouslyFocused = document.activeElement;
+    closeButtonRef.current?.focus();
+    return () => previouslyFocused?.focus();
+  }, []);
+
+  // Close on Escape key
+  useEffect(() => {
+    function handleKeyDown(e) {
+      if (e.key === 'Escape') onClose();
+    }
+    document.addEventListener('keydown', handleKeyDown);
+    return () => document.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 px-4 pb-4 sm:pb-0">
+    <div
+      className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-50 px-4 pb-4 sm:pb-0"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby={titleId}
+    >
       <div className="bg-white rounded-2xl w-full max-w-sm p-6 shadow-2xl">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="font-bold text-slate-800 text-lg">{title}</h3>
-          <button onClick={onClose} className="text-slate-400 hover:text-slate-600 transition-colors">
+          <h3 id={titleId} className="font-bold text-slate-800 text-lg">{title}</h3>
+          <button
+            ref={closeButtonRef}
+            onClick={onClose}
+            aria-label="Yopish"
+            className="text-slate-400 hover:text-slate-600 transition-colors"
+          >
             <X className="w-5 h-5" />
           </button>
         </div>
