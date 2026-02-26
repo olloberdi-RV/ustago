@@ -1,20 +1,21 @@
 import { useState, useEffect, useRef } from 'react';
-import { Wrench, Play, Pause, RefreshCw, ShieldCheck, AlertTriangle, DollarSign, Clock } from 'lucide-react';
+import { Play, Pause, RefreshCw, ShieldCheck, AlertTriangle, DollarSign, Clock } from 'lucide-react';
+import type { DashboardProps } from '../types';
 
-function formatMoney(amount) {
+function formatMoney(amount: number): string {
   return new Intl.NumberFormat('uz-UZ').format(amount) + ' UZS';
 }
 
-function formatTime(totalSeconds) {
+function formatTime(totalSeconds: number): string {
   const h = Math.floor(totalSeconds / 3600);
   const m = Math.floor((totalSeconds % 3600) / 60);
   const s = totalSeconds % 60;
   return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}:${String(s).padStart(2, '0')}`;
 }
 
-export default function UstaDashboard({ data, onSwitchRole }) {
+export default function UstaDashboard({ data, onSwitchRole }: DashboardProps) {
   const { users, ustaProfile, transactions, projects } = data;
-  const usta = users.find((u) => u.role === 'usta');
+  const usta = users.find((u) => u.role === 'usta')!;
   const project = projects[0];
 
   const [isRunning, setIsRunning] = useState(false);
@@ -22,7 +23,7 @@ export default function UstaDashboard({ data, onSwitchRole }) {
   const [sessionSeconds, setSessionSeconds] = useState(0);
   const [showAdvanceModal, setShowAdvanceModal] = useState(false);
   const [advanceSent, setAdvanceSent] = useState(false);
-  const intervalRef = useRef(null);
+  const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
 
   useEffect(() => {
     if (!isRunning) return;
@@ -30,9 +31,10 @@ export default function UstaDashboard({ data, onSwitchRole }) {
       setTotalSeconds((s) => s + 1);
       setSessionSeconds((s) => s + 1);
     }, 1000);
-    return () => clearInterval(intervalRef.current);
+    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
   }, [isRunning]);
 
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const pendingTx = transactions.filter((t) => t.status === 'pending' && t.to === 'u3');
   const advances = transactions.filter((t) => t.type === 'advance' && t.status === 'completed');
 

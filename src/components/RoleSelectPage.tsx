@@ -1,6 +1,25 @@
+import type { LucideIcon } from 'lucide-react';
 import { HardHat, User, Wrench, Store, Truck, ShieldCheck } from 'lucide-react';
+import type { Role } from '../types';
 
-const roles = [
+interface RoleOption {
+  id: Role;
+  label: string;
+  sublabel: string;
+  description: string;
+  icon: LucideIcon;
+  color: string;
+  hoverColor: string;
+  lightBg: string;
+  textColor: string;
+  borderColor: string;
+}
+
+interface RoleSelectPageProps {
+  onSelectRole: (role: Role) => void;
+}
+
+const roles: RoleOption[] = [
   {
     id: 'client',
     label: 'Buyurtmachi',
@@ -63,7 +82,7 @@ const roles = [
   },
 ];
 
-export default function RoleSelectPage({ onSelectRole }) {
+export default function RoleSelectPage({ onSelectRole }: RoleSelectPageProps) {
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col">
       {/* Header */}

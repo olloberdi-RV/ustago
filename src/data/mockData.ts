@@ -1,4 +1,6 @@
-const mockData = {
+import type { MockData } from '../types';
+
+const mockData: MockData = {
   users: [
     { id: "u1", role: "client", name: "Alisher Umarov", phone: "+998 90 123 45 67", avatar: "AU" },
     { id: "u2", role: "prorab", name: "Bobur Karimov", phone: "+998 91 234 56 78", avatar: "BK" },

@@ -1,42 +1,44 @@
 import { useState } from 'react';
+import type { ChangeEvent, FormEvent } from 'react';
 import { HardHat, Plus, RefreshCw, CheckCircle2, XCircle, Star, ShieldCheck } from 'lucide-react';
+import type { DashboardProps, Material } from '../types';
 
-function formatMoney(amount) {
+function formatMoney(amount: number): string {
   return new Intl.NumberFormat('uz-UZ').format(amount) + ' UZS';
 }
 
-const statusMap = {
+const statusMap: Record<Material['status'], { label: string; color: string }> = {
   delivered: { label: 'Yetkazildi', color: 'bg-emerald-100 text-emerald-700' },
   pending: { label: 'Kutilmoqda', color: 'bg-orange-100 text-orange-700' },
   returned: { label: 'Qaytarildi', color: 'bg-red-100 text-red-700' },
 };
 
-export default function ProrabDashboard({ data, onSwitchRole }) {
+export default function ProrabDashboard({ data, onSwitchRole }: DashboardProps) {
   const { estimates, users, projects } = data;
-  const prorab = users.find((u) => u.role === 'prorab');
+  const prorab = users.find((u) => u.role === 'prorab')!;
   const estimate = estimates[0];
   const project = projects[0];
 
-  const [materials, setMaterials] = useState(estimate.materials);
+  const [materials, setMaterials] = useState<Material[]>(estimate.materials);
   const [ustaRating, setUstaRating] = useState(87);
   const [showAddForm, setShowAddForm] = useState(false);
   const [newItem, setNewItem] = useState({ name: '', quantity: '', unitPrice: '', unit: '' });
 
-  function handleAccept(id) {
+  function handleAccept(id: string) {
     setMaterials((prev) =>
       prev.map((m) => (m.id === id ? { ...m, status: 'delivered' } : m))
     );
   }
 
-  function handleReturn(id) {
+  function handleReturn(id: string) {
     setMaterials((prev) =>
       prev.map((m) => (m.id === id ? { ...m, status: 'returned' } : m))
     );
   }
 
-  function handleAddItem(e) {
+  function handleAddItem(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
-    const item = {
+    const item: Material = {
       id: 'm' + Date.now(),
       name: newItem.name,
       quantity: parseInt(newItem.quantity),
@@ -124,14 +126,14 @@ export default function ProrabDashboard({ data, onSwitchRole }) {
                     placeholder="Miqdor"
                     type="number"
                     value={newItem.quantity}
-                    onChange={(e) => setNewItem({ ...newItem, quantity: e.target.value })}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setNewItem({ ...newItem, quantity: e.target.value })}
                     required
                   />
                   <input
                     className="w-20 border border-slate-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-amber-400"
                     placeholder="Birlik"
                     value={newItem.unit}
-                    onChange={(e) => setNewItem({ ...newItem, unit: e.target.value })}
+                    onChange={(e: ChangeEvent<HTMLInputElement>) => setNewItem({ ...newItem, unit: e.target.value })}
                   />
                 </div>
                 <input
@@ -139,7 +141,7 @@ export default function ProrabDashboard({ data, onSwitchRole }) {
                   placeholder="Narx (UZS)"
                   type="number"
                   value={newItem.unitPrice}
-                  onChange={(e) => setNewItem({ ...newItem, unitPrice: e.target.value })}
+                  onChange={(e: ChangeEvent<HTMLInputElement>) => setNewItem({ ...newItem, unitPrice: e.target.value })}
                   required
                 />
                 <div className="flex gap-2">
