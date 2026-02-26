@@ -101,17 +101,17 @@ export default function LandingPage({ onGetStarted }: LandingPageProps) {
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4">
             {[
-              { icon: ShieldCheck, label: 'Buyurtmachi', desc: 'Moliyalashtirish va nazorat', color: 'blue' },
-              { icon: HardHat, label: 'Prorab', desc: 'Smeta va sifat nazorati', color: 'amber' },
-              { icon: Wrench, label: 'Usta', desc: 'Ish bajarish va vaqt hisobi', color: 'violet' },
-              { icon: Store, label: 'Magazin', desc: 'Materiallar va buyurtmalar', color: 'emerald' },
-              { icon: Truck, label: 'Haydovchi', desc: 'Yetkazib berish va PIN', color: 'cyan' },
+              { icon: ShieldCheck, label: 'Buyurtmachi', desc: 'Moliyalashtirish va nazorat', bgColor: 'bg-blue-50', textColor: 'text-blue-600' },
+              { icon: HardHat, label: 'Prorab', desc: 'Smeta va sifat nazorati', bgColor: 'bg-amber-50', textColor: 'text-amber-600' },
+              { icon: Wrench, label: 'Usta', desc: 'Ish bajarish va vaqt hisobi', bgColor: 'bg-violet-50', textColor: 'text-violet-600' },
+              { icon: Store, label: 'Magazin', desc: 'Materiallar va buyurtmalar', bgColor: 'bg-emerald-50', textColor: 'text-emerald-600' },
+              { icon: Truck, label: 'Haydovchi', desc: 'Yetkazib berish va PIN', bgColor: 'bg-cyan-50', textColor: 'text-cyan-600' },
             ].map((role) => {
               const Icon = role.icon;
               return (
                 <div key={role.label} className="bg-white rounded-2xl p-5 border border-slate-100 shadow-sm text-center">
-                  <div className={`bg-${role.color}-50 rounded-xl p-3 w-fit mx-auto mb-3`}>
-                    <Icon className={`w-6 h-6 text-${role.color}-600`} />
+                  <div className={`${role.bgColor} rounded-xl p-3 w-fit mx-auto mb-3`}>
+                    <Icon className={`w-6 h-6 ${role.textColor}`} />
                   </div>
                   <div className="font-bold text-slate-800 mb-1">{role.label}</div>
                   <div className="text-slate-500 text-sm">{role.desc}</div>
